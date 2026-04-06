@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CryptoVerse — Real-Time Blockchain Dashboard</title>
+    <meta name="description" content="A stunning real-time blockchain dashboard featuring wallet connection, live crypto prices, gas tracker, and Ethereum block explorer. Built with Web3 technologies.">
+    <meta name="keywords" content="Web3, Blockchain, Ethereum, Crypto, Dashboard, DeFi, MetaMask">
+    <meta name="author" content="CryptoVerse">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="css/style.css">
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <!-- Ethers.js -->
+    <script src="https://cdn.jsdelivr.net/npm/ethers@6.9.0/dist/ethers.umd.min.js"></script>
+</head>
+<body>
+
+    <!-- ═══════════ Ambient Background ═══════════ -->
+    <div class="ambient-bg" aria-hidden="true">
+        <div class="gradient-orb orb-1"></div>
+        <div class="gradient-orb orb-2"></div>
+        <div class="gradient-orb orb-3"></div>
+    </div>
+
+    <!-- ═══════════ Header ═══════════ -->
+    <header class="header" id="header">
+        <div class="header-inner">
+            <div class="header-left">
+                <a href="#" class="logo" aria-label="CryptoVerse Home">
+                    <span class="logo-icon">
+                        <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+                            <path d="M14 2L26 8V20L14 26L2 20V8L14 2Z" stroke="url(#logoGrad)" stroke-width="2" fill="none"/>
+                            <path d="M14 6L22 10V18L14 22L6 18V10L14 6Z" fill="url(#logoGrad)" opacity="0.3"/>
+                            <path d="M14 10L18 12V16L14 18L10 16V12L14 10Z" fill="url(#logoGrad)"/>
+                            <defs>
+                                <linearGradient id="logoGrad" x1="2" y1="2" x2="26" y2="26">
+                                    <stop offset="0%" stop-color="#6366f1"/>
+                                    <stop offset="50%" stop-color="#8b5cf6"/>
+                                    <stop offset="100%" stop-color="#06b6d4"/>
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                    </span>
+                    <span class="logo-text">Crypto<span class="logo-accent">Verse</span></span>
+                </a>
+            </div>
+
+            <nav class="header-nav" id="headerNav">
+                <a href="#" class="nav-link active" data-section="dashboard">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><rect x="1" y="1" width="6" height="6" rx="1"/><rect x="9" y="1" width="6" height="6" rx="1"/><rect x="1" y="9" width="6" height="6" rx="1"/><rect x="9" y="9" width="6" height="6" rx="1"/></svg>
+                    Dashboard
+                </a>
+                <a href="#" class="nav-link" data-section="explorer">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 1a7 7 0 100 14A7 7 0 008 1zm0 2a5 5 0 110 10A5 5 0 018 3zm0 2a3 3 0 100 6 3 3 0 000-6z"/></svg>
+                    Explorer
+                </a>
+                <a href="#" class="nav-link" data-section="wallet">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M2 4a2 2 0 012-2h8a2 2 0 012 2v1H2V4zm0 3h12v5a2 2 0 01-2 2H4a2 2 0 01-2-2V7zm8 2a1 1 0 100 2 1 1 0 000-2z"/></svg>
+                    Wallet
+                </a>
+            </nav>
+
+            <div class="header-right">
+                <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                    <svg class="icon-moon" width="18" height="18" viewBox="0 0 18 18" fill="currentColor"><path d="M7.5 1.5a6 6 0 106 10.5A7.5 7.5 0 117.5 1.5z"/></svg>
+                    <svg class="icon-sun" width="18" height="18" viewBox="0 0 18 18" fill="currentColor" style="display:none"><circle cx="9" cy="9" r="3.5"/><path d="M9 1v2m0 12v2m-6.36-2.64l1.42-1.42m9.9-9.9l1.42-1.42M1 9h2m12 0h2M3.64 3.64l1.42 1.42m9.9 9.9l1.42 1.42"/></svg>
+                </button>
+                <div class="network-badge" id="networkBadge">
+                    <span class="network-dot"></span>
+                    <span class="network-name">Ethereum</span>
+                </div>
+                <button class="wallet-btn" id="connectWallet">
+                    <span class="wallet-btn-glow"></span>
+                    <span class="wallet-icon">
+                        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="5" width="14" height="10" rx="2"/><path d="M2 5V4a2 2 0 012-2h10a2 2 0 012 2v1"/><circle cx="12.5" cy="10" r="1.5" fill="currentColor"/></svg>
+                    </span>
+                    <span class="wallet-text" id="walletText">Connect Wallet</span>
+                </button>
+            </div>
+
+            <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle menu">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </header>
+
+    <!-- ═══════════ Stats Bar ═══════════ -->
+    <div class="stats-bar" id="statsBar">
+        <div class="stats-bar-inner">
+            <div class="stat-item">
+                <span class="stat-label">Total Market Cap</span>
+                <span class="stat-value" id="totalMarketCap">
+                    <span class="skeleton-text">$0.00T</span>
+                </span>
+            </div>
+            <div class="stat-divider"></div>
+            <div class="stat-item">
+                <span class="stat-label">24h Volume</span>
+                <span class="stat-value" id="totalVolume">
+                    <span class="skeleton-text">$0.00B</span>
+                </span>
+            </div>
+            <div class="stat-divider"></div>
+            <div class="stat-item">
+                <span class="stat-label">BTC Dominance</span>
+                <span class="stat-value" id="btcDominance">
+                    <span class="skeleton-text">0.0%</span>
+                </span>
+            </div>
+            <div class="stat-divider"></div>
+            <div class="stat-item">
+                <span class="stat-label">ETH Gas</span>
+                <span class="stat-value" id="gasPrice">
+                    <span class="skeleton-text">0 Gwei</span>
+                </span>
+            </div>
+            <div class="stat-divider"></div>
+            <div class="stat-item">
+                <span class="stat-label">Active Coins</span>
+                <span class="stat-value" id="activeCoins">
+                    <span class="skeleton-text">0</span>
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════ Main Dashboard ═══════════ -->
+    <main class="dashboard" id="mainDashboard">
+
+        <!-- ── Price Chart ── -->
+        <section class="card card-chart" id="chartCard">
+            <div class="card-header">
+                <div class="card-title-group">
+                    <h2 class="card-title">
+                        <img src="" alt="" class="chart-coin-icon" id="chartCoinIcon" style="display:none">
+                        <span id="chartCoinName">Ethereum</span>
+                    </h2>
+                    <div class="chart-price-info">
+                        <span class="chart-current-price" id="chartCurrentPrice">$0.00</span>
+                        <span class="chart-price-change" id="chartPriceChange">0.00%</span>
+                    </div>
+                </div>
+                <div class="card-actions">
+                    <div class="chart-coin-select">
+                        <select id="chartCoinSelect">
+                            <option value="ethereum">ETH</option>
+                            <option value="bitcoin">BTC</option>
+                            <option value="solana">SOL</option>
+                            <option value="cardano">ADA</option>
+                            <option value="polkadot">DOT</option>
+                        </select>
+                    </div>
+                    <div class="chart-periods">
+                        <button class="period-btn active" data-days="1">24H</button>
+                        <button class="period-btn" data-days="7">7D</button>
+                        <button class="period-btn" data-days="30">30D</button>
+                        <button class="period-btn" data-days="365">1Y</button>
+                    </div>
+                </div>
+            </div>
+            <div class="chart-container">
+                <canvas id="priceChart"></canvas>
+                <div class="chart-loading" id="chartLoading">
+                    <div class="spinner"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ── Top Coins ── -->
+        <section class="card card-coins" id="coinsCard">
+            <div class="card-header">
+                <h2 class="card-title">Top Cryptocurrencies</h2>
+                <span class="live-badge">
+                    <span class="live-dot"></span> LIVE
+                </span>
+            </div>
+            <div class="coins-table-header">
+                <span class="col-rank">#</span>
+                <span class="col-name">Name</span>
+                <span class="col-price">Price</span>
+                <span class="col-change">24h</span>
+                <span class="col-sparkline">7D Chart</span>
+            </div>
+            <div class="coins-list" id="coinsList">
+                <!-- Skeleton loaders -->
+                <div class="coin-row skeleton-row"><div class="skeleton-block"></div></div>
+                <div class="coin-row skeleton-row"><div class="skeleton-block"></div></div>
+                <div class="coin-row skeleton-row"><div class="skeleton-block"></div></div>
+                <div class="coin-row skeleton-row"><div class="skeleton-block"></div></div>
+                <div class="coin-row skeleton-row"><div class="skeleton-block"></div></div>
+                <div class="coin-row skeleton-row"><div class="skeleton-block"></div></div>
+                <div class="coin-row skeleton-row"><div class="skeleton-block"></div></div>
+            </div>
+        </section>
+
+        <!-- ── Gas Tracker ── -->
+        <section class="card card-gas" id="gasCard">
+            <div class="card-header">
+                <h2 class="card-title">⛽ Gas Tracker</h2>
+                <span class="card-subtitle">Ethereum Network</span>
+            </div>
+            <div class="gas-grid">
+                <div class="gas-tier gas-low">
+                    <div class="gas-tier-icon">🐢</div>
+                    <div class="gas-tier-label">Low</div>
+                    <div class="gas-tier-value" id="gasLow">-- Gwei</div>
+                    <div class="gas-tier-time">~10 min</div>
+                </div>
+                <div class="gas-tier gas-standard">
+                    <div class="gas-tier-icon">🚗</div>
+                    <div class="gas-tier-label">Standard</div>
+                    <div class="gas-tier-value" id="gasStandard">-- Gwei</div>
+                    <div class="gas-tier-time">~3 min</div>
+                </div>
+                <div class="gas-tier gas-fast">
+                    <div class="gas-tier-icon">🚀</div>
+                    <div class="gas-tier-label">Fast</div>
+                    <div class="gas-tier-value" id="gasFast">-- Gwei</div>
+                    <div class="gas-tier-time">~30 sec</div>
+                </div>
+            </div>
+            <div class="gas-chart-container">
+                <canvas id="gasChart"></canvas>
+            </div>
+        </section>
+
+        <!-- ── Latest Blocks ── -->
+        <section class="card card-blocks" id="blocksCard">
+            <div class="card-header">
+                <h2 class="card-title">🧱 Latest Blocks</h2>
+                <span class="card-subtitle">Ethereum Mainnet</span>
+            </div>
+            <div class="blocks-list" id="blocksList">
+                <div class="block-row skeleton-row"><div class="skeleton-block"></div></div>
+                <div class="block-row skeleton-row"><div class="skeleton-block"></div></div>
+                <div class="block-row skeleton-row"><div class="skeleton-block"></div></div>
+                <div class="block-row skeleton-row"><div class="skeleton-block"></div></div>
+                <div class="block-row skeleton-row"><div class="skeleton-block"></div></div>
+            </div>
+        </section>
+
+        <!-- ── Wallet Info ── -->
+        <section class="card card-wallet" id="walletCard">
+            <div class="card-header">
+                <h2 class="card-title">💼 Wallet</h2>
+            </div>
+            <div class="wallet-content" id="walletContent">
+                <div class="wallet-not-connected">
+                    <div class="wallet-placeholder-icon">
+                        <svg width="64" height="64" viewBox="0 0 64 64" fill="none">
+                            <rect x="8" y="16" width="48" height="36" rx="6" stroke="url(#wGrad)" stroke-width="2" fill="none"/>
+                            <path d="M8 16V14a6 6 0 016-6h36a6 6 0 016 6v2" stroke="url(#wGrad)" stroke-width="2"/>
+                            <circle cx="44" cy="34" r="5" fill="url(#wGrad)" opacity="0.5"/>
+                            <circle cx="44" cy="34" r="3" fill="url(#wGrad)"/>
+                            <defs>
+                                <linearGradient id="wGrad" x1="8" y1="8" x2="56" y2="52">
+                                    <stop offset="0%" stop-color="#6366f1"/>
+                                    <stop offset="100%" stop-color="#06b6d4"/>
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                    </div>
+                    <h3>No Wallet Connected</h3>
+                    <p>Connect your MetaMask wallet to view your balances, transaction history, and interact with the blockchain.</p>
+                    <button class="connect-wallet-cta" id="connectWalletCta">
+                        <span>🦊</span> Connect MetaMask
+                    </button>
+                </div>
+
+                <div class="wallet-connected" id="walletConnected" style="display:none">
+                    <div class="wallet-address-card">
+                        <div class="wallet-avatar" id="walletAvatar"></div>
+                        <div class="wallet-address-info">
+                            <span class="wallet-address-label">Connected Address</span>
+                            <span class="wallet-address-hash" id="walletAddress">0x0000...0000</span>
+                        </div>
+                        <button class="copy-btn" id="copyAddress" aria-label="Copy address">
+                            <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M4 4v-1a2 2 0 012-2h5a2 2 0 012 2v5a2 2 0 01-2 2H10V10a2 2 0 00-2-2H4zm0 2a2 2 0 00-2 2v5a2 2 0 002 2h4a2 2 0 002-2V8a2 2 0 00-2-2H4z"/></svg>
+                        </button>
+                    </div>
+                    <div class="wallet-balances">
+                        <div class="balance-item balance-eth">
+                            <div class="balance-icon">Ξ</div>
+                            <div class="balance-info">
+                                <span class="balance-label">ETH Balance</span>
+                                <span class="balance-value" id="ethBalance">0.0000 ETH</span>
+                                <span class="balance-usd" id="ethBalanceUsd">≈ $0.00</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="wallet-tx-section">
+                        <h4>Network Info</h4>
+                        <div class="network-info-grid">
+                            <div class="info-item">
+                                <span class="info-label">Network</span>
+                                <span class="info-value" id="networkName">--</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Chain ID</span>
+                                <span class="info-value" id="chainId">--</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Block Height</span>
+                                <span class="info-value" id="blockHeight">--</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Last Updated</span>
+                                <span class="info-value" id="lastUpdated">--</span>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="disconnect-btn" id="disconnectWallet">Disconnect Wallet</button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ═══════════ Footer ═══════════ -->
+    <footer class="footer">
+        <div class="footer-inner">
+            <div class="footer-left">
+                <span class="footer-logo">◆ CryptoVerse</span>
+                <span class="footer-copy">© 2026 — Built with Web3 Technologies</span>
+            </div>
+            <div class="footer-right">
+                <span class="footer-tech">Powered by Ethers.js · CoinGecko · Chart.js</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ═══════════ Toast Container ═══════════ -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- App Script -->
+    <script src="js/app.js"></script>
+</body>
+</html>

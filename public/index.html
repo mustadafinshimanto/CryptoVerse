@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CryptoVerse — Full-Stack Blockchain Dashboard</title>
+    <meta name="description" content="A full-stack real-time blockchain dashboard with tx decoder, address analyzer, block explorer, whale alerts, multi-chain support, and MetaMask wallet integration.">
+    <meta name="keywords" content="Web3, Blockchain, Ethereum, Crypto, Dashboard, DeFi, MetaMask, Node.js">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/ethers@6.9.0/dist/ethers.umd.min.js"></script>
+</head>
+<body>
+
+    <!-- Ambient Background -->
+    <div class="ambient-bg" aria-hidden="true">
+        <div class="gradient-orb orb-1"></div>
+        <div class="gradient-orb orb-2"></div>
+        <div class="gradient-orb orb-3"></div>
+    </div>
+
+    <!-- ═══════ Header ═══════ -->
+    <header class="header" id="header">
+        <div class="header-inner">
+            <a href="#" class="logo" data-page="dashboard">
+                <span class="logo-icon">
+                    <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><path d="M14 2L26 8V20L14 26L2 20V8L14 2Z" stroke="url(#lg)" stroke-width="2" fill="none"/><path d="M14 6L22 10V18L14 22L6 18V10L14 6Z" fill="url(#lg)" opacity="0.3"/><path d="M14 10L18 12V16L14 18L10 16V12L14 10Z" fill="url(#lg)"/><defs><linearGradient id="lg" x1="2" y1="2" x2="26" y2="26"><stop offset="0%" stop-color="#6366f1"/><stop offset="50%" stop-color="#8b5cf6"/><stop offset="100%" stop-color="#06b6d4"/></linearGradient></defs></svg>
+                </span>
+                <span class="logo-text">Crypto<span class="logo-accent">Verse</span></span>
+                <span class="version-badge">v2</span>
+            </a>
+
+            <!-- Search Bar -->
+            <div class="search-container" id="searchContainer">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M11.742 10.344a6.5 6.5 0 10-1.397 1.398h-.001l3.85 3.85a1 1 0 001.415-1.414l-3.85-3.85-.017.016zm-5.442.156a5 5 0 110-10 5 5 0 010 10z"/></svg>
+                <input type="text" class="search-input" id="searchInput" placeholder="Search by address / tx hash / block / ENS..." autocomplete="off">
+                <div class="search-dropdown" id="searchDropdown"></div>
+                <kbd class="search-kbd">/</kbd>
+            </div>
+
+            <!-- Navigation -->
+            <nav class="header-nav" id="headerNav">
+                <a href="#" class="nav-link active" data-page="dashboard">
+                    <svg width="15" height="15" viewBox="0 0 16 16" fill="currentColor"><rect x="1" y="1" width="6" height="6" rx="1"/><rect x="9" y="1" width="6" height="6" rx="1"/><rect x="1" y="9" width="6" height="6" rx="1"/><rect x="9" y="9" width="6" height="6" rx="1"/></svg>
+                    Dashboard
+                </a>
+                <a href="#" class="nav-link" data-page="explorer">
+                    <svg width="15" height="15" viewBox="0 0 16 16" fill="currentColor"><path d="M3 1h10a2 2 0 012 2v10a2 2 0 01-2 2H3a2 2 0 01-2-2V3a2 2 0 012-2zm0 2v10h10V3H3zm2 2h6v1H5V5zm0 3h6v1H5V8zm0 3h4v1H5v-1z"/></svg>
+                    Explorer
+                </a>
+                <a href="#" class="nav-link" data-page="analyzer">
+                    <svg width="15" height="15" viewBox="0 0 16 16" fill="currentColor"><path d="M8 1a7 7 0 100 14A7 7 0 008 1zm0 2.5a1.5 1.5 0 110 3 1.5 1.5 0 010-3zM6.5 8h3v4.5h-3V8z"/></svg>
+                    TX Analyzer
+                </a>
+                <a href="#" class="nav-link" data-page="address">
+                    <svg width="15" height="15" viewBox="0 0 16 16" fill="currentColor"><path d="M8 8a3 3 0 100-6 3 3 0 000 6zm-5 6a5 5 0 0110 0H3z"/></svg>
+                    Address
+                </a>
+                <a href="#" class="nav-link" data-page="wallet">
+                    <svg width="15" height="15" viewBox="0 0 16 16" fill="currentColor"><path d="M2 4a2 2 0 012-2h8a2 2 0 012 2v1H2V4zm0 3h12v5a2 2 0 01-2 2H4a2 2 0 01-2-2V7zm8 2a1 1 0 100 2 1 1 0 000-2z"/></svg>
+                    Wallet
+                </a>
+            </nav>
+
+            <div class="header-right">
+                <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                    <svg class="icon-moon" width="16" height="16" viewBox="0 0 18 18" fill="currentColor"><path d="M7.5 1.5a6 6 0 106 10.5A7.5 7.5 0 117.5 1.5z"/></svg>
+                    <svg class="icon-sun" width="16" height="16" viewBox="0 0 18 18" fill="currentColor" style="display:none"><circle cx="9" cy="9" r="3.5"/><path d="M9 1v2m0 12v2m-6.36-2.64l1.42-1.42m9.9-9.9l1.42-1.42M1 9h2m12 0h2M3.64 3.64l1.42 1.42m9.9 9.9l1.42 1.42"/></svg>
+                </button>
+
+                <!-- Chain Selector -->
+                <select class="chain-select" id="chainSelect">
+                    <option value="ethereum">🔷 Ethereum</option>
+                    <option value="polygon">🟣 Polygon</option>
+                    <option value="bsc">🟡 BSC</option>
+                </select>
+
+                <div class="ws-status" id="wsStatus">
+                    <span class="ws-dot disconnected"></span>
+                    <span class="ws-label">Offline</span>
+                </div>
+
+                <button class="wallet-btn" id="connectWallet">
+                    <span class="wallet-btn-glow"></span>
+                    <svg width="16" height="16" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="5" width="14" height="10" rx="2"/><path d="M2 5V4a2 2 0 012-2h10a2 2 0 012 2v1"/><circle cx="12.5" cy="10" r="1.5" fill="currentColor"/></svg>
+                    <span class="wallet-text" id="walletText">Connect</span>
+                </button>
+            </div>
+
+            <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Menu"><span></span><span></span><span></span></button>
+        </div>
+    </header>
+
+    <!-- ═══════ Whale Alert Ticker ═══════ -->
+    <div class="whale-ticker" id="whaleTicker" style="display:none">
+        <div class="whale-ticker-inner">
+            <span class="whale-icon">🐋</span>
+            <span class="whale-text" id="whaleText">Waiting for whale alerts...</span>
+        </div>
+    </div>
+
+    <!-- ═══════ Stats Bar ═══════ -->
+    <div class="stats-bar" id="statsBar">
+        <div class="stats-bar-inner">
+            <div class="stat-item">
+                <span class="stat-label">Block</span>
+                <span class="stat-value mono" id="statBlock">--</span>
+            </div>
+            <div class="stat-divider"></div>
+            <div class="stat-item">
+                <span class="stat-label">Gas</span>
+                <span class="stat-value mono" id="statGas">--</span>
+            </div>
+            <div class="stat-divider"></div>
+            <div class="stat-item">
+                <span class="stat-label">Market Cap</span>
+                <span class="stat-value mono" id="statMarketCap">--</span>
+            </div>
+            <div class="stat-divider"></div>
+            <div class="stat-item">
+                <span class="stat-label">24h Vol</span>
+                <span class="stat-value mono" id="statVolume">--</span>
+            </div>
+            <div class="stat-divider"></div>
+            <div class="stat-item">
+                <span class="stat-label">BTC Dom</span>
+                <span class="stat-value mono" id="statBtcDom">--</span>
+            </div>
+            <div class="stat-divider"></div>
+            <div class="stat-item">
+                <span class="stat-label">WS</span>
+                <span class="stat-value" id="statWs">
+                    <span class="ws-inline-dot disconnected"></span>
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════ PAGE: Dashboard ═══════ -->
+    <main class="page page-dashboard active" id="page-dashboard">
+        <div class="dashboard-grid">
+            <!-- Price Chart -->
+            <section class="card card-chart" id="chartCard">
+                <div class="card-header">
+                    <div class="card-title-group">
+                        <h2 class="card-title"><img src="" alt="" class="chart-coin-icon" id="chartCoinIcon" style="display:none"><span id="chartCoinName">Ethereum</span></h2>
+                        <div class="chart-price-info">
+                            <span class="chart-current-price mono" id="chartPrice">$0.00</span>
+                            <span class="chart-price-change" id="chartChange">0.00%</span>
+                        </div>
+                    </div>
+                    <div class="card-actions">
+                        <select class="mini-select" id="chartCoinSelect"><option value="ethereum">ETH</option><option value="bitcoin">BTC</option><option value="solana">SOL</option><option value="cardano">ADA</option><option value="polkadot">DOT</option></select>
+                        <div class="chart-periods">
+                            <button class="period-btn active" data-days="1">24H</button>
+                            <button class="period-btn" data-days="7">7D</button>
+                            <button class="period-btn" data-days="30">30D</button>
+                            <button class="period-btn" data-days="365">1Y</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="chart-container"><canvas id="priceChart"></canvas><div class="chart-loading" id="chartLoading"><div class="spinner"></div></div></div>
+            </section>
+
+            <!-- Top Coins -->
+            <section class="card card-coins">
+                <div class="card-header"><h2 class="card-title">Top Cryptocurrencies</h2><span class="live-badge"><span class="live-dot"></span> LIVE</span></div>
+                <div class="coins-table-header"><span class="col-rank">#</span><span class="col-name">Name</span><span class="col-price">Price</span><span class="col-change">24h</span><span class="col-sparkline">7d</span></div>
+                <div class="coins-list" id="coinsList"><div class="skeleton-rows"><div class="skeleton-block"></div><div class="skeleton-block"></div><div class="skeleton-block"></div><div class="skeleton-block"></div><div class="skeleton-block"></div></div></div>
+            </section>
+
+            <!-- Gas Oracle -->
+            <section class="card card-gas">
+                <div class="card-header"><h2 class="card-title">⛽ Gas Oracle</h2><span class="card-subtitle eip1559-badge">EIP-1559</span></div>
+                <div class="gas-grid">
+                    <div class="gas-tier gas-low"><div class="gas-tier-icon">🐢</div><div class="gas-tier-label">Low</div><div class="gas-tier-value mono" id="gasLow">--</div><div class="gas-tier-time">~10 min</div></div>
+                    <div class="gas-tier gas-standard"><div class="gas-tier-icon">🚗</div><div class="gas-tier-label">Standard</div><div class="gas-tier-value mono" id="gasStandard">--</div><div class="gas-tier-time">~3 min</div></div>
+                    <div class="gas-tier gas-fast"><div class="gas-tier-icon">🚀</div><div class="gas-tier-label">Fast</div><div class="gas-tier-value mono" id="gasFast">--</div><div class="gas-tier-time">~30 sec</div></div>
+                </div>
+                <div class="gas-costs" id="gasCosts">
+                    <h4>Estimated Costs (USD)</h4>
+                    <div class="gas-cost-grid">
+                        <div class="gas-cost-item"><span class="gas-cost-label">ETH Transfer</span><span class="gas-cost-value mono" id="costTransfer">--</span></div>
+                        <div class="gas-cost-item"><span class="gas-cost-label">ERC-20 Transfer</span><span class="gas-cost-value mono" id="costErc20">--</span></div>
+                        <div class="gas-cost-item"><span class="gas-cost-label">Uniswap Swap</span><span class="gas-cost-value mono" id="costSwap">--</span></div>
+                        <div class="gas-cost-item"><span class="gas-cost-label">NFT Mint</span><span class="gas-cost-value mono" id="costMint">--</span></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Live Block Feed -->
+            <section class="card card-blocks">
+                <div class="card-header"><h2 class="card-title">🧱 Live Blocks</h2><span class="live-badge"><span class="live-dot"></span> WebSocket</span></div>
+                <div class="blocks-list" id="blocksList"><div class="placeholder-message"><div class="spinner"></div><p>Connecting to blockchain...</p></div></div>
+            </section>
+        </div>
+    </main>
+
+    <!-- ═══════ PAGE: Explorer ═══════ -->
+    <main class="page page-explorer" id="page-explorer">
+        <div class="page-header">
+            <h1>🔍 Block Explorer</h1>
+            <p>Browse Ethereum blocks and their transactions in real time.</p>
+        </div>
+        <div class="explorer-grid">
+            <section class="card">
+                <div class="card-header"><h2 class="card-title">Latest Blocks</h2>
+                    <button class="btn-secondary" id="refreshBlocks">↻ Refresh</button>
+                </div>
+                <div class="table-container">
+                    <table class="data-table" id="explorerBlocksTable">
+                        <thead><tr><th>Block</th><th>Age</th><th>Txns</th><th>Validator</th><th>Gas Used</th><th>Base Fee</th></tr></thead>
+                        <tbody id="explorerBlocksBody"><tr><td colspan="6" class="loading-cell"><div class="spinner"></div></td></tr></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section class="card" id="blockDetailCard" style="display:none">
+                <div class="card-header"><h2 class="card-title">Block Details</h2>
+                    <button class="btn-secondary" id="closeBlockDetail">✕ Close</button>
+                </div>
+                <div id="blockDetailContent"></div>
+            </section>
+        </div>
+    </main>
+
+    <!-- ═══════ PAGE: TX Analyzer ═══════ -->
+    <main class="page page-analyzer" id="page-analyzer">
+        <div class="page-header">
+            <h1>🔬 Transaction Analyzer</h1>
+            <p>Paste a transaction hash to decode and analyze it — including input data, event logs, and gas costs.</p>
+        </div>
+        <div class="analyzer-container">
+            <div class="search-box">
+                <input type="text" class="big-input" id="txHashInput" placeholder="Paste transaction hash (0x...)">
+                <button class="btn-primary" id="analyzeTxBtn">Analyze</button>
+            </div>
+            <div id="txResult" class="result-container"></div>
+        </div>
+    </main>
+
+    <!-- ═══════ PAGE: Address Inspector ═══════ -->
+    <main class="page page-address" id="page-address">
+        <div class="page-header">
+            <h1>🔎 Address Inspector</h1>
+            <p>Inspect any Ethereum address — balances, contract detection, ENS, and ERC-20 tokens.</p>
+        </div>
+        <div class="analyzer-container">
+            <div class="search-box">
+                <input type="text" class="big-input" id="addressInput" placeholder="Paste address (0x...) or ENS name (vitalik.eth)">
+                <button class="btn-primary" id="inspectAddrBtn">Inspect</button>
+            </div>
+            <div id="addressResult" class="result-container"></div>
+        </div>
+    </main>
+
+    <!-- ═══════ PAGE: Wallet ═══════ -->
+    <main class="page page-wallet" id="page-wallet">
+        <div class="page-header">
+            <h1>💼 Web3 Wallet</h1>
+            <p>Connect your MetaMask wallet to view your balances & interact with the blockchain.</p>
+        </div>
+        <div class="wallet-container">
+            <!-- Not Connected -->
+            <div class="wallet-hero" id="walletHero">
+                <div class="wallet-hero-icon">
+                    <svg width="80" height="80" viewBox="0 0 64 64" fill="none"><rect x="8" y="16" width="48" height="36" rx="6" stroke="url(#wg)" stroke-width="2.5" fill="none"/><path d="M8 16V14a6 6 0 016-6h36a6 6 0 016 6v2" stroke="url(#wg)" stroke-width="2.5"/><circle cx="44" cy="34" r="5" fill="url(#wg)" opacity="0.4"/><circle cx="44" cy="34" r="3" fill="url(#wg)"/><defs><linearGradient id="wg" x1="8" y1="8" x2="56" y2="52"><stop offset="0%" stop-color="#6366f1"/><stop offset="100%" stop-color="#06b6d4"/></linearGradient></defs></svg>
+                </div>
+                <h2>Connect Your Wallet</h2>
+                <p>Connect MetaMask to view your ETH balance, ERC-20 tokens, network info, and more.</p>
+                <button class="btn-primary btn-lg" id="walletConnectCta">🦊 Connect MetaMask</button>
+            </div>
+
+            <!-- Connected -->
+            <div class="wallet-dashboard" id="walletDashboard" style="display:none">
+                <div class="wallet-grid">
+                    <div class="card wallet-main-card">
+                        <div class="wallet-address-row">
+                            <div class="wallet-avatar" id="walletAvatar"></div>
+                            <div class="wallet-address-info">
+                                <span class="wallet-ens" id="walletEns"></span>
+                                <span class="wallet-addr mono" id="walletAddr">0x0000...0000</span>
+                            </div>
+                            <button class="copy-btn" id="copyAddr" title="Copy address"><svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M4 4v-1a2 2 0 012-2h5a2 2 0 012 2v5a2 2 0 01-2 2H10V10a2 2 0 00-2-2H4zm0 2a2 2 0 00-2 2v5a2 2 0 002 2h4a2 2 0 002-2V8a2 2 0 00-2-2H4z"/></svg></button>
+                        </div>
+                        <div class="balance-hero">
+                            <div class="balance-eth-icon">Ξ</div>
+                            <div class="balance-amounts">
+                                <span class="balance-eth mono" id="walletEthBal">0.0000 ETH</span>
+                                <span class="balance-usd" id="walletUsdBal">≈ $0.00</span>
+                            </div>
+                        </div>
+                        <div class="network-info-grid">
+                            <div class="info-item"><span class="info-label">Network</span><span class="info-value" id="walletNetwork">--</span></div>
+                            <div class="info-item"><span class="info-label">Chain ID</span><span class="info-value mono" id="walletChainId">--</span></div>
+                            <div class="info-item"><span class="info-label">Nonce</span><span class="info-value mono" id="walletNonce">--</span></div>
+                            <div class="info-item"><span class="info-label">Type</span><span class="info-value" id="walletType">--</span></div>
+                        </div>
+                        <button class="btn-danger" id="disconnectBtn">Disconnect Wallet</button>
+                    </div>
+
+                    <div class="card wallet-tokens-card">
+                        <div class="card-header"><h2 class="card-title">ERC-20 Tokens</h2></div>
+                        <div class="tokens-list" id="tokensList"><div class="placeholder-message"><p>Scanning tokens...</p></div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- ═══════ Footer ═══════ -->
+    <footer class="footer">
+        <div class="footer-inner">
+            <div class="footer-left">
+                <span class="footer-logo">◆ CryptoVerse</span>
+                <span class="footer-copy">Full-Stack Blockchain Dashboard — Node.js + Ethers.js + WebSocket</span>
+            </div>
+            <div class="footer-right">
+                <span class="footer-tech">express · ethers.js · chart.js · ws</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Toast -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script src="js/app.js"></script>
+</body>
+</html>
