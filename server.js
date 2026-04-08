@@ -86,16 +86,32 @@ const CHAINS = {
     },
 };
 
-// Popular ERC-20 tokens on Ethereum (address → info)
+// Popular tokens per chain
 const POPULAR_TOKENS = {
-    '0xdAC17F958D2ee523a2206206994597C13D831ec7': { symbol: 'USDT', name: 'Tether', decimals: 6 },
-    '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48': { symbol: 'USDC', name: 'USD Coin', decimals: 6 },
-    '0x6B175474E89094C44Da98b954EesdeCD56130b7a': { symbol: 'DAI', name: 'Dai', decimals: 18 },
-    '0x514910771AF9Ca656af840dff83E8264EcF986CA': { symbol: 'LINK', name: 'Chainlink', decimals: 18 },
-    '0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984': { symbol: 'UNI', name: 'Uniswap', decimals: 18 },
-    '0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599': { symbol: 'WBTC', name: 'Wrapped BTC', decimals: 8 },
-    '0x7D1AfA7B718fb893dB30A3aBc0Cfc608AaCfeBB0': { symbol: 'MATIC', name: 'Polygon', decimals: 18 },
-    '0x95aD61b0a150d79219dCF64E1E6Cc01f0B64C4cE': { symbol: 'SHIB', name: 'Shiba Inu', decimals: 18 },
+    ethereum: {
+        '0xdAC17F958D2ee523a2206206994597C13D831ec7': { symbol: 'USDT', name: 'Tether', decimals: 6 },
+        '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48': { symbol: 'USDC', name: 'USD Coin', decimals: 6 },
+        '0x6B175474E89094C44Da98b954EesdeCD56130b7a': { symbol: 'DAI', name: 'Dai', decimals: 18 },
+        '0x514910771AF9Ca656af840dff83E8264EcF986CA': { symbol: 'LINK', name: 'Chainlink', decimals: 18 },
+        '0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984': { symbol: 'UNI', name: 'Uniswap', decimals: 18 },
+        '0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599': { symbol: 'WBTC', name: 'Wrapped BTC', decimals: 8 },
+    },
+    mantaPacific: {
+        '0xf417F5A458eC102B90352F697D6e2Ac3A3d2851f': { symbol: 'USDT', name: 'Tether (Manta)', decimals: 6 },
+        '0xb7322792694E4f1E2C8449B8aE029A9008801594': { symbol: 'USDC', name: 'USD Coin (Manta)', decimals: 6 },
+        '0x0Dc808Ad50918efF5b943591c9D49173d8C27471': { symbol: 'WETH', name: 'Wrapped Ether', decimals: 18 },
+    },
+    bsc: {
+        '0x55d398326f99059fF775485246999027B3197955': { symbol: 'USDT', name: 'BSC-USD', decimals: 18 },
+        '0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d': { symbol: 'USDC', name: 'Binance-Peg USDC', decimals: 18 },
+        '0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56': { symbol: 'BUSD', name: 'BUSD Token', decimals: 18 },
+        '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c': { symbol: 'WBNB', name: 'Wrapped BNB', decimals: 18 },
+    },
+    polygon: {
+        '0xc2132D05D31c914a87C6611C10748AEb04B58e8F': { symbol: 'USDT', name: 'Tether (Polygon)', decimals: 6 },
+        '0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174': { symbol: 'USDC', name: 'USD Coin (Polygon)', decimals: 6 },
+        '0x8f3Cf7ad23Cd3BaDbD9735AFf958023239c6A063': { symbol: 'DAI', name: '(PoS) Dai Stablecoin', decimals: 18 },
+    }
 };
 
 // Standard ABIs for decoding
@@ -349,13 +365,9 @@ async function analyzeAddress(address, chain = activeChain) {
 async function scanTokens(address, chain = activeChain) {
     const provider = getProvider(chain);
     const tokens = [];
+    const chainTokens = POPULAR_TOKENS[chain] || {};
 
-    // Only scan Ethereum mainnet tokens
-    if (chain !== 'ethereum') {
-        return { address, chain, tokens: [], note: 'Token scanning only available on Ethereum mainnet' };
-    }
-
-    const scanPromises = Object.entries(POPULAR_TOKENS).map(async ([tokenAddress, tokenInfo]) => {
+    const scanPromises = Object.entries(chainTokens).map(async ([tokenAddress, tokenInfo]) => {
         try {
             const contract = new ethers.Contract(tokenAddress, ERC20_ABI, provider);
             const balance = await contract.balanceOf(address);
@@ -957,6 +969,37 @@ async function startBlockListener() {
                                 blockNumber: block.number,
                             });
                             console.log(`  🐋 Whale alert: ${ethValue.toFixed(2)} ETH | ${formatAddr(tx.from)} → ${formatAddr(tx.to)}`);
+                        }
+
+                        // ERC-20 Whale detection (USDT, USDC, DAI)
+                        if (tx.data && tx.data.length >= 138) { // Minimum length for transfer(address,uint256)
+                            const selector = tx.data.slice(0, 10);
+                            if (selector === '0xa9059cbb') { // transfer(address,uint256)
+                                try {
+                                    const chainTokens = POPULAR_TOKENS[activeChain] || {};
+                                    const tokenInfo = chainTokens[tx.to];
+                                    if (tokenInfo) {
+                                        const decoded = KNOWN_INTERFACES.decodeFunctionData('transfer', tx.data);
+                                        const amount = parseFloat(ethers.formatUnits(decoded[1], tokenInfo.decimals));
+                                        
+                                        // Threshold for stablecoin whales: 100k
+                                        const stableThreshold = 100000;
+                                        if (amount >= stableThreshold) {
+                                            broadcast('whaleAlert', {
+                                                hash: tx.hash,
+                                                from: tx.from,
+                                                fromShort: formatAddr(tx.from),
+                                                to: decoded[0],
+                                                toShort: formatAddr(decoded[0]),
+                                                value: amount.toLocaleString(),
+                                                symbol: tokenInfo.symbol,
+                                                blockNumber: block.number,
+                                            });
+                                            console.log(`  🐋 Token Whale: ${amount.toLocaleString()} ${tokenInfo.symbol} | ${formatAddr(tx.from)} → ${formatAddr(decoded[0])}`);
+                                        }
+                                    }
+                                } catch (e) {}
+                            }
                         }
                     }
                 }

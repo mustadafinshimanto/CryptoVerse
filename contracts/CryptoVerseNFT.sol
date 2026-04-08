@@ -123,11 +123,36 @@ contract CryptoVerseNFT {
     }
 
     function safeTransferFrom(address from, address to, uint256 tokenId) public {
-        transferFrom(from, to, tokenId);
+        safeTransferFrom(from, to, tokenId, "");
     }
 
-    function safeTransferFrom(address from, address to, uint256 tokenId, bytes memory) public {
+    function safeTransferFrom(address from, address to, uint256 tokenId, bytes memory data) public {
         transferFrom(from, to, tokenId);
+        require(_checkOnERC721Received(from, to, tokenId, data), "CVNFT: transfer to non ERC721Receiver implementer");
+    }
+
+    /**
+     * @dev Internal function to invoke {IERC721Receiver-onERC721Received} on a target address.
+     * The call is not executed if the target address is not a contract.
+     */
+    function _checkOnERC721Received(address from, address to, uint256 tokenId, bytes memory data)
+        private returns (bool)
+    {
+        if (to.code.length > 0) {
+            try IERC721Receiver(to).onERC721Received(msg.sender, from, tokenId, data) returns (bytes4 retval) {
+                return retval == IERC721Receiver.onERC721Received.selector;
+            } catch (bytes memory reason) {
+                if (reason.length == 0) {
+                    revert("CVNFT: transfer to non ERC721Receiver implementer");
+                } else {
+                    assembly {
+                        revert(add(32, reason), mload(reason))
+                    }
+                }
+            }
+        } else {
+            return true;
+        }
     }
 
     // ═══════════════════════════════════════
@@ -476,4 +501,12 @@ contract CryptoVerseNFT {
     function getTokenSeed(uint256 tokenId) external view tokenExists(tokenId) returns (uint256) {
         return _tokenSeeds[tokenId];
     }
+}
+
+/**
+ * @title IERC721Receiver interface
+ * @dev Interface for any contract that wants to support safeTransfers from ERC721 asset contracts.
+ */
+interface IERC721Receiver {
+    function onERC721Received(address operator, address from, uint256 tokenId, bytes calldata data) external returns (bytes4);
 }

@@ -26,6 +26,8 @@
         "function allowance(address,address) view returns (uint256)",
         "function transfer(address to, uint256 amount) returns (bool)",
         "function approve(address spender, uint256 amount) returns (bool)",
+        "function increaseAllowance(address spender, uint256 addedValue) returns (bool)",
+        "function decreaseAllowance(address spender, uint256 subtractedValue) returns (bool)",
         "function transferFrom(address from, address to, uint256 amount) returns (bool)",
         "function mint(address to, uint256 amount)",
         "function burn(uint256 amount)",
@@ -599,6 +601,135 @@ contract CryptoVerseVault {
                 handleInteractError(err);
             }
         });
+
+        // Allowance: Approve
+        $('#approveBtn')?.addEventListener('click', async () => {
+            const signer = await getSigner();
+            if (!signer) return;
+            const contractAddr = $('#interactAddress').value.trim();
+            const spender = $('#allowanceSpender').value.trim();
+            const amount = parseFloat($('#allowanceAmount').value) || 0;
+            if (!contractAddr || !spender) return showToast('Address and spender required', 'warning');
+
+            try {
+                const contract = new ethers.Contract(contractAddr, TOKEN_ABI, signer);
+                const decimals = await contract.decimals();
+                const amountWei = ethers.parseUnits(amount.toString(), decimals);
+                showToast('Approving... Confirm in MetaMask.', 'info');
+                const tx = await contract.approve(spender, amountWei);
+                await tx.wait();
+                showInteractResult(`✅ Approved ${amount} tokens for ${spender.slice(0, 10)}...`);
+                showToast('Approval successful!', 'success');
+            } catch (err) { handleInteractError(err); }
+        });
+
+        // Allowance: Increase
+        $('#increaseAllowanceBtn')?.addEventListener('click', async () => {
+            const signer = await getSigner();
+            if (!signer) return;
+            const contractAddr = $('#interactAddress').value.trim();
+            const spender = $('#allowanceSpender').value.trim();
+            const amount = parseFloat($('#allowanceAmount').value) || 0;
+
+            try {
+                const contract = new ethers.Contract(contractAddr, TOKEN_ABI, signer);
+                const decimals = await contract.decimals();
+                const amountWei = ethers.parseUnits(amount.toString(), decimals);
+                showToast('Increasing allowance...', 'info');
+                const tx = await contract.increaseAllowance(spender, amountWei);
+                await tx.wait();
+                showToast('Allowance increased!', 'success');
+            } catch (err) { handleInteractError(err); }
+        });
+
+        // Allowance: Decrease
+        $('#decreaseAllowanceBtn')?.addEventListener('click', async () => {
+            const signer = await getSigner();
+            if (!signer) return;
+            const contractAddr = $('#interactAddress').value.trim();
+            const spender = $('#allowanceSpender').value.trim();
+            const amount = parseFloat($('#allowanceAmount').value) || 0;
+
+            try {
+                const contract = new ethers.Contract(contractAddr, TOKEN_ABI, signer);
+                const decimals = await contract.decimals();
+                const amountWei = ethers.parseUnits(amount.toString(), decimals);
+                showToast('Decreasing allowance...', 'info');
+                const tx = await contract.decreaseAllowance(spender, amountWei);
+                await tx.wait();
+                showToast('Allowance decreased!', 'success');
+            } catch (err) { handleInteractError(err); }
+        });
+
+        // Vault: Deposit
+        $('#vaultDepositBtn')?.addEventListener('click', async () => {
+            const signer = await getSigner();
+            if (!signer) return;
+            const vaultAddr = $('#interactAddress').value.trim();
+            const duration = $('#vaultLockDuration').value;
+            const amountEth = $('#vaultDepositAmount').value;
+
+            try {
+                const vault = new ethers.Contract(vaultAddr, VAULT_ABI, signer);
+                showToast('Depositing into Vault...', 'info');
+                const tx = await vault.deposit(duration, { value: ethers.parseEther(amountEth) });
+                await tx.wait();
+                showToast('Deposit successful!', 'success');
+                updateUserStakes(vault, await signer.getAddress());
+            } catch (err) { handleInteractError(err); }
+        });
+    }
+
+    async function updateUserStakes(vault, address) {
+        try {
+            const stakes = await vault.getUserStakes(address);
+            const list = $('#userStakesList');
+            const section = $('#vaultStakesSection');
+            if (!list) return;
+
+            if (stakes.length === 0) {
+                section.style.display = 'none';
+                return;
+            }
+
+            section.style.display = '';
+            list.innerHTML = stakes.map((s, i) => `
+                <div class="stake-card ${s.withdrawn ? 'withdrawn' : ''}">
+                    <div class="stake-info">
+                        <span class="stake-amt">${ethers.formatEther(s.amount)} ETH</span>
+                        <span class="stake-duration">${formatDuration(s.lockDuration)}</span>
+                    </div>
+                    <div class="stake-actions">
+                        ${!s.withdrawn ? `<button class="btn-mini-withdraw" onclick="window.withdrawFromVault('${vault.target}', ${i})">Withdraw</button>` : '<span>Withdrawn</span>'}
+                    </div>
+                </div>
+            `).join('');
+        } catch (e) { console.error('Fetch stakes error:', e); }
+    }
+
+    window.withdrawFromVault = async (vaultAddr, index) => {
+        const signer = await getSigner();
+        if (!signer) return;
+        try {
+            const vault = new ethers.Contract(vaultAddr, VAULT_ABI, signer);
+            showToast('Withdrawing from Vault...', 'info');
+            const tx = await vault.withdraw(index);
+            await tx.wait();
+            showToast('Withdrawal successful!', 'success');
+            updateUserStakes(vault, await signer.getAddress());
+        } catch (err) {
+            if (err.message.includes('locked')) showToast('Stake is still locked!', 'warning');
+            else handleInteractError(err);
+        }
+    };
+
+    function formatDuration(sec) {
+        const s = Number(sec);
+        if (s === 0) return 'Flexible';
+        if (s === 2592000) return '30 Days';
+        if (s === 7776000) return '90 Days';
+        if (s === 15552000) return '180 Days';
+        return `${s / 86400} Days`;
     }
 
     // ══════════════════════════════════════

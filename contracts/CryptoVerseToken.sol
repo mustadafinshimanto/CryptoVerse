@@ -129,6 +129,8 @@ contract CryptoVerseToken {
 
     /**
      * @notice Sets the amount of tokens that spender is allowed to spend on behalf of the caller.
+     * @dev To mitigate the race condition, it is recommended to use increaseAllowance
+     *      and decreaseAllowance instead of this function.
      * @param spender The address authorized to spend.
      * @param amount The maximum amount they can spend.
      * @return success True if approval was successful.
@@ -140,6 +142,38 @@ contract CryptoVerseToken {
     {
         _allowances[msg.sender][spender] = amount;
         emit Approval(msg.sender, spender, amount);
+        return true;
+    }
+
+    /**
+     * @notice Atomically increases the allowance granted to `spender` by the caller.
+     */
+    function increaseAllowance(address spender, uint256 addedValue)
+        public
+        validAddress(spender)
+        returns (bool)
+    {
+        _allowances[msg.sender][spender] += addedValue;
+        emit Approval(msg.sender, spender, _allowances[msg.sender][spender]);
+        return true;
+    }
+
+    /**
+     * @notice Atomically decreases the allowance granted to `spender` by the caller.
+     */
+    function decreaseAllowance(address spender, uint256 subtractedValue)
+        public
+        validAddress(spender)
+        returns (bool)
+    {
+        uint256 currentAllowance = _allowances[msg.sender][spender];
+        require(currentAllowance >= subtractedValue, "CVT: decreased allowance below zero");
+        
+        unchecked {
+            _allowances[msg.sender][spender] = currentAllowance - subtractedValue;
+        }
+        
+        emit Approval(msg.sender, spender, _allowances[msg.sender][spender]);
         return true;
     }
 
