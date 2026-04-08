@@ -88,7 +88,7 @@ img { max-width:100%; display:block; }
 
 /* ═══ Header ═══ */
 .header { position:sticky; top:0; z-index:100; height:var(--header-height); background:var(--glass-bg); backdrop-filter:blur(var(--glass-blur)); -webkit-backdrop-filter:blur(var(--glass-blur)); border-bottom:1px solid var(--glass-border); }
-.header-inner { max-width:1500px; margin:0 auto; padding:0 20px; height:100%; display:flex; align-items:center; gap:16px; }
+.header-inner { max-width:1500px; margin:0 auto; padding:0 20px; height:100%; display:flex; align-items:center; gap:12px; }
 .logo { display:flex; align-items:center; gap:8px; flex-shrink:0; transition:transform var(--transition-base); }
 .logo:hover { transform:scale(1.03); }
 .logo-icon { display:flex; filter:drop-shadow(0 0 12px rgba(99,102,241,0.4)); }
@@ -115,7 +115,7 @@ img { max-width:100%; display:block; }
 
 /* Nav */
 .header-nav { display:flex; align-items:center; gap:2px; background:var(--bg-input); border-radius:var(--radius-lg); padding:3px; border:1px solid var(--border-color); }
-.nav-link { display:flex; align-items:center; gap:5px; padding:6px 12px; border-radius:var(--radius-md); font-size:0.78rem; font-weight:500; color:var(--text-secondary); transition:all var(--transition-base); white-space:nowrap; }
+.nav-link { display:flex; align-items:center; gap:4px; padding:6px 10px; border-radius:var(--radius-md); font-size:0.75rem; font-weight:500; color:var(--text-secondary); transition:all var(--transition-base); white-space:nowrap; }
 .nav-link:hover { color:var(--text-primary); background:rgba(255,255,255,0.04); }
 .nav-link.active { color:var(--text-primary); background:var(--bg-card); box-shadow:var(--shadow-sm); }
 [data-theme="light"] .nav-link.active { background:var(--bg-card-solid); }
@@ -209,10 +209,10 @@ img { max-width:100%; display:block; }
 .chart-loading.visible { opacity:1; pointer-events:auto; }
 
 /* ═══ Coins List ═══ */
-.coins-table-header { display:grid; grid-template-columns:26px 1fr 85px 60px 70px; gap:6px; padding:0 10px 10px; font-size:0.67rem; font-weight:600; text-transform:uppercase; letter-spacing:0.06em; color:var(--text-tertiary); border-bottom:1px solid var(--border-color); }
+.coins-table-header { display:grid; grid-template-columns:26px minmax(120px, 1fr) 100px 65px 75px; gap:8px; padding:0 10px 10px; font-size:0.67rem; font-weight:600; text-transform:uppercase; letter-spacing:0.06em; color:var(--text-tertiary); border-bottom:1px solid var(--border-color); }
 .col-price,.col-change { text-align:right; }
 .coins-list { max-height:500px; overflow-y:auto; }
-.coin-row { display:grid; grid-template-columns:26px 1fr 85px 60px 70px; gap:6px; align-items:center; padding:9px 10px; border-radius:var(--radius-sm); transition:background var(--transition-fast); cursor:pointer; }
+.coin-row { display:grid; grid-template-columns:26px minmax(120px, 1fr) 100px 65px 75px; gap:8px; align-items:center; padding:9px 10px; border-radius:var(--radius-sm); transition:background var(--transition-fast); cursor:pointer; }
 .coin-row:hover { background:rgba(255,255,255,0.03); }
 .coin-rank { font-size:0.75rem; font-weight:600; color:var(--text-tertiary); }
 .coin-info { display:flex; align-items:center; gap:8px; min-width:0; }
@@ -382,18 +382,26 @@ img { max-width:100%; display:block; }
 ::selection { background:rgba(99,102,241,0.3); color:white; }
 
 /* ═══ Responsive ═══ */
-@media(max-width:1200px) { .dashboard-grid{grid-template-columns:1fr 320px;} }
-@media(max-width:1024px) {
-    .dashboard-grid{grid-template-columns:1fr;} .card-coins{grid-column:1;grid-row:auto;} .coins-list{max-height:300px;}
-    .wallet-grid{grid-template-columns:1fr;} .result-grid{grid-template-columns:1fr;}
-    .search-container{max-width:300px;}
+@media(max-width:1200px) { 
+    .dashboard-grid{grid-template-columns:1fr 320px;}
+    .search-container{max-width:260px;}
+    .ws-status span {display:none;}
 }
-@media(max-width:768px) {
+@media(max-width:1150px) {
     .header-nav{display:none;position:absolute;top:var(--header-height);left:0;right:0;flex-direction:column;background:var(--bg-card-solid);border-bottom:1px solid var(--border-color);padding:10px;border-radius:0;z-index:200;}
     .header-nav.open{display:flex;}
     .mobile-menu-btn{display:flex;}
     .search-container{display:none;}
+}
+@media(max-width:1024px) {
+    .dashboard-grid{grid-template-columns:1fr;} .card-coins{grid-column:1;grid-row:auto;} .coins-list{max-height:300px;}
+    .wallet-grid{grid-template-columns:1fr;} .result-grid{grid-template-columns:1fr;}
+    .search-container{display:none;}
     .chain-select{display:none;}
+    .contracts-grid{grid-template-columns:1fr;} 
+    .contracts-deploy-card, .contracts-interact-card, .contracts-nft-card, .contracts-source-card {grid-column:1;}
+}
+@media(max-width:768px) {
     .ws-status{display:none;}
     .wallet-text{display:none;}
     .page{padding:16px;}
@@ -402,10 +410,14 @@ img { max-width:100%; display:block; }
     .chart-container{height:220px;}
     .gas-grid{grid-template-columns:1fr;}
     .gas-cost-grid{grid-template-columns:1fr;}
-    .coins-table-header,.coin-row{grid-template-columns:22px 1fr 75px 55px;}
+    .coins-table-header,.coin-row{grid-template-columns:22px minmax(100px, 1fr) 95px 55px; gap:6px;}
     .col-sparkline,.coin-sparkline{display:none;}
     .footer-inner{flex-direction:column;text-align:center;} .footer-copy{margin-left:0;}
     .search-box{flex-direction:column;}
+    .deploy-tabs, .interact-tabs, .source-tabs {flex-direction:column;}
+    .source-code {max-height:300px;font-size:0.68rem;}
+    .nft-gallery {grid-template-columns:repeat(auto-fill, minmax(140px, 1fr));}
+    .source-info {flex-direction:column;}
 }
 
 /* ═══════════════════════════════════════════
@@ -499,7 +511,7 @@ img { max-width:100%; display:block; }
 }
 
 /* Form elements */
-.deploy-form, .interact-panel {
+.deploy-form, .interact-panel.active {
     display: flex;
     flex-direction: column;
     gap: 12px;
@@ -718,30 +730,3 @@ img { max-width:100%; display:block; }
     font-weight: 600;
 }
 
-/* ═══ Contracts Responsive ═══ */
-@media(max-width:1024px) {
-    .contracts-grid {
-        grid-template-columns: 1fr;
-    }
-    .contracts-deploy-card,
-    .contracts-interact-card,
-    .contracts-nft-card,
-    .contracts-source-card {
-        grid-column: 1;
-    }
-}
-@media(max-width:768px) {
-    .deploy-tabs, .interact-tabs, .source-tabs {
-        flex-direction: column;
-    }
-    .source-code {
-        max-height: 300px;
-        font-size: 0.68rem;
-    }
-    .nft-gallery {
-        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-    }
-    .source-info {
-        flex-direction: column;
-    }
-}
