@@ -6,7 +6,7 @@
 
 <p align="center">
   <b>A Full-Stack Web3 Portfolio Project & Real-Time Blockchain Dashboard</b><br>
-  <i>✨ Built with Solidity · Hardhat · Manta Pacific · Node.js · Ethers.js ✨</i>
+  <i>✨ Built with Solidity · Hardhat · Node.js · Ethers.js ✨</i>
 </p>
 
 <p align="center">
@@ -15,7 +15,6 @@
   <img src="https://img.shields.io/badge/Node.js-18+-339933?style=for-the-badge&logo=node.js&logoColor=white" alt="Node.js">
   <img src="https://img.shields.io/badge/Ethers.js-6.x-3C3C3D?style=for-the-badge&logo=ethereum&logoColor=white" alt="Ethers.js">
   <img src="https://img.shields.io/badge/WebSocket-Live-6366f1?style=for-the-badge&logo=websocket&logoColor=white" alt="WebSocket">
-  <img src="https://img.shields.io/badge/Manta_Network-Pacific_L2-06b6d4?style=for-the-badge" alt="Manta Network">
   <img src="https://img.shields.io/badge/license-MIT-blue?style=for-the-badge" alt="License">
 </p>
 
@@ -29,14 +28,14 @@
 
 ## 🚀 Overview
 
-**CryptoVerse** is a production-grade, full-stack **Web3 Portfolio Project** designed to demonstrate advanced blockchain engineering capabilities. It bridges the gap between Web2 dashboard analytics and true Web3 interactivity by integrating **custom Solidity smart contracts**, on-chain write interactions, and seamless support for **EVM-compatible environments like Manta Pacific L2**.
+**CryptoVerse** is a production-grade, full-stack **Web3 Portfolio Project** designed to demonstrate advanced blockchain engineering capabilities. It bridges the gap between Web2 dashboard analytics and true Web3 interactivity by integrating **custom Solidity smart contracts**, on-chain write interactions, and seamless support for **EVM-compatible Layer 2 environments**.
 
 It features a robust Hardhat development environment for Solidity, a Node.js backend powering 15+ REST API endpoints, a live WebSocket server for real-time synchronization, and a premium frontend interface designed for direct Web3 wallet (MetaMask) interactions.
 
 This project demonstrates comprehensive Web3 and blockchain engineering skills, including:
 
 - **Solidity Smart Contract Development:** Custom ERC-20 token, fully on-chain generative ERC-721 NFT, and a DeFi Staking Vault (written from scratch to demonstrate low-level EVM knowledge).
-- **Manta Network Integration:** Configured to deploy to and interact with the Manta Pacific L2 ecosystem.
+- **Multi-Chain Support:** Configured to deploy to and interact with various EVM-compatible ecosystems.
 - **On-Chain Web3 Interactions:** MetaMask integration for deploying contracts, minting NFTs, and staking funds directly from the frontend.
 - **Server-Side Blockchain Interaction:** Complex transaction decoding, block streaming, and gas estimation via Ethers.js multi-chain providers.
 
@@ -56,7 +55,7 @@ This project demonstrates comprehensive Web3 and blockchain engineering skills, 
 
 | Feature | Description |
 |---|---|
-| **Multi-Chain Support** | Ethereum, **Manta Pacific L2**, Polygon, BSC with automatic RPC failover |
+| **Multi-Chain Support** | Ethereum, Polygon, BSC with automatic RPC failover |
 | **Transaction Decoder** | Parses ERC-20 transfers, Uniswap swaps, NFT operations from raw calldata |
 | **Address Analyzer** | Detects EOA vs Smart Contract, reads bytecode size, resolves ENS |
 | **Token Scanner** | Checks popular ERC-20 token balances for any address |
@@ -92,7 +91,7 @@ CryptoVerse/
 │   ├── CryptoVerseToken.sol   (Custom ERC-20)
 │   ├── CryptoVerseNFT.sol     (On-chain Generative Art)
 │   └── CryptoVerseVault.sol   (DeFi Staking Vault)
-├── hardhat.config.js      # Hardhat config with Manta Pacific settings
+├── hardhat.config.js      # Hardhat configuration
 ├── server.js              # Node.js backend (Express + WebSocket + Ethers.js)
 ├── package.json           # Dependencies and scripts
 ├── .env                   # Environment variables (gitignored)

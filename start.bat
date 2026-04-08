@@ -6,7 +6,7 @@ echo.
 echo   ╔════════════════════════════════════════════════════════════╗
 echo   ║                                                            ║
 echo   ║   ◆  CryptoVerse Web3 Portfolio Project Launcher           ║
-echo   ║      (Includes Manta Pacific L2 ^& Smart Contracts)        ║
+echo   ║      (Includes Layer 2 Support ^& Smart Contracts)        ║
 echo   ║                                                            ║
 echo   ╚════════════════════════════════════════════════════════════╝
 echo.

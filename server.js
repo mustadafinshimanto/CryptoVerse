@@ -39,27 +39,7 @@ const CHAINS = {
         ].filter(Boolean),
         explorer: 'https://etherscan.io',
     },
-    mantaPacific: {
-        name: 'Manta Pacific',
-        chainId: 169,
-        symbol: 'ETH',
-        rpcs: [
-            process.env.MANTA_RPC_URL,
-            'https://pacific-rpc.manta.network/http',
-            'https://1rpc.io/manta',
-        ].filter(Boolean),
-        explorer: 'https://pacific-explorer.manta.network',
-    },
-    mantaTestnet: {
-        name: 'Manta Testnet',
-        chainId: 3441006,
-        symbol: 'ETH',
-        rpcs: [
-            process.env.MANTA_TESTNET_RPC_URL,
-            'https://pacific-rpc.sepolia-testnet.manta.network/http',
-        ].filter(Boolean),
-        explorer: 'https://pacific-explorer.sepolia-testnet.manta.network',
-    },
+
     polygon: {
         name: 'Polygon',
         chainId: 137,

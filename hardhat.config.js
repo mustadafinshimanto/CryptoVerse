@@ -17,22 +17,7 @@ module.exports = {
         hardhat: {
             chainId: 31337,
         },
-        // Manta Pacific Mainnet (L2)
-        mantaPacific: {
-            url: process.env.MANTA_RPC_URL || "https://pacific-rpc.manta.network/http",
-            chainId: 169,
-            accounts: process.env.DEPLOYER_PRIVATE_KEY
-                ? [process.env.DEPLOYER_PRIVATE_KEY]
-                : [],
-        },
-        // Manta Pacific Sepolia Testnet
-        mantaTestnet: {
-            url: process.env.MANTA_TESTNET_RPC_URL || "https://pacific-rpc.sepolia-testnet.manta.network/http",
-            chainId: 3441006,
-            accounts: process.env.DEPLOYER_PRIVATE_KEY
-                ? [process.env.DEPLOYER_PRIVATE_KEY]
-                : [],
-        },
+
         // Ethereum Sepolia Testnet
         sepolia: {
             url: process.env.SEPOLIA_RPC_URL || "https://rpc.ankr.com/eth_sepolia",
