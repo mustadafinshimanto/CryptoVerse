@@ -1,13 +1,18 @@
 {
   "name": "cryptoverse",
-  "version": "2.0.0",
-  "description": "CryptoVerse — Full-Stack Real-Time Blockchain Dashboard powered by Node.js, Ethers.js & WebSockets",
+  "version": "3.0.0",
+  "description": "CryptoVerse — Full-Stack Web3 Blockchain Dashboard with Solidity Smart Contracts, Manta Pacific L2 support, and real-time data streaming",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "dev": "node --watch server.js"
+    "dev": "node --watch server.js",
+    "compile": "npx hardhat compile",
+    "test": "npx hardhat test",
+    "deploy:local": "npx hardhat run scripts/deploy.js --network localhost",
+    "deploy:manta-testnet": "npx hardhat run scripts/deploy.js --network mantaTestnet",
+    "deploy:manta": "npx hardhat run scripts/deploy.js --network mantaPacific"
   },
-  "keywords": ["blockchain", "ethereum", "web3", "dashboard", "defi", "crypto"],
+  "keywords": ["blockchain", "ethereum", "web3", "dashboard", "defi", "crypto", "solidity", "smart-contracts", "manta-network", "erc20", "nft", "erc721", "hardhat", "layer2"],
   "license": "MIT",
   "dependencies": {
     "express": "^4.18.2",
@@ -15,5 +20,9 @@
     "ws": "^8.16.0",
     "dotenv": "^16.3.1",
     "cors": "^2.8.5"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^4.0.0",
+    "hardhat": "^2.19.0"
   }
 }

@@ -1,13 +1,14 @@
 @echo off
-title CryptoVerse - Blockchain Dashboard Server
+title CryptoVerse - Web3 Smart Contract & Blockchain Dashboard
 color 0A
 
 echo.
-echo   ╔═══════════════════════════════════════════════════╗
-echo   ║                                                   ║
-echo   ║   ◆  CryptoVerse Blockchain Dashboard Launcher    ║
-echo   ║                                                   ║
-echo   ╚═══════════════════════════════════════════════════╝
+echo   ╔════════════════════════════════════════════════════════════╗
+echo   ║                                                            ║
+echo   ║   ◆  CryptoVerse Web3 Portfolio Project Launcher           ║
+echo   ║      (Includes Manta Pacific L2 ^& Smart Contracts)        ║
+echo   ║                                                            ║
+echo   ╚════════════════════════════════════════════════════════════╝
 echo.
 
 :: Check if Node.js is installed

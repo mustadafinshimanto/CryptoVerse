@@ -61,6 +61,10 @@
                     <svg width="15" height="15" viewBox="0 0 16 16" fill="currentColor"><path d="M8 8a3 3 0 100-6 3 3 0 000 6zm-5 6a5 5 0 0110 0H3z"/></svg>
                     Address
                 </a>
+                <a href="#" class="nav-link" data-page="contracts">
+                    <svg width="15" height="15" viewBox="0 0 16 16" fill="currentColor"><path d="M4 1h8l3 3v9a2 2 0 01-2 2H4a2 2 0 01-2-2V3a2 2 0 012-2zm1 5v1h6V6H5zm0 3v1h4V9H5z"/></svg>
+                    Smart Contracts
+                </a>
                 <a href="#" class="nav-link" data-page="wallet">
                     <svg width="15" height="15" viewBox="0 0 16 16" fill="currentColor"><path d="M2 4a2 2 0 012-2h8a2 2 0 012 2v1H2V4zm0 3h12v5a2 2 0 01-2 2H4a2 2 0 01-2-2V7zm8 2a1 1 0 100 2 1 1 0 000-2z"/></svg>
                     Wallet
@@ -76,6 +80,8 @@
                 <!-- Chain Selector -->
                 <select class="chain-select" id="chainSelect">
                     <option value="ethereum">🔷 Ethereum</option>
+                    <option value="mantaPacific">🔵 Manta Pacific</option>
+                    <option value="mantaTestnet">🧪 Manta Testnet</option>
                     <option value="polygon">🟣 Polygon</option>
                     <option value="bsc">🟡 BSC</option>
                 </select>
@@ -313,15 +319,184 @@
         </div>
     </main>
 
+    <!-- ═══════ PAGE: Smart Contracts ═══════ -->
+    <main class="page page-contracts" id="page-contracts">
+        <div class="page-header">
+            <h1>📜 Smart Contracts</h1>
+            <p>Deploy, interact with, and explore Solidity smart contracts — ERC-20 Token, ERC-721 NFT, and DeFi Vault. Compatible with any EVM chain including Manta Pacific.</p>
+        </div>
+        <div class="contracts-grid">
+
+            <!-- Contract Deploy Section -->
+            <section class="card contracts-deploy-card">
+                <div class="card-header">
+                    <h2 class="card-title">🚀 Deploy Contract</h2>
+                    <span class="card-subtitle">Requires MetaMask</span>
+                </div>
+                <div class="deploy-tabs">
+                    <button class="deploy-tab active" data-contract="token">ERC-20 Token</button>
+                    <button class="deploy-tab" data-contract="nft">ERC-721 NFT</button>
+                    <button class="deploy-tab" data-contract="vault">DeFi Vault</button>
+                </div>
+
+                <!-- Token Deploy -->
+                <div class="deploy-panel active" id="deploy-token">
+                    <div class="deploy-desc">
+                        <span class="contract-badge token">CryptoVerseToken (CVT)</span>
+                        <p>Custom ERC-20 token with mint, burn, pause, and ownership features.</p>
+                    </div>
+                    <div class="deploy-form">
+                        <div class="form-group">
+                            <label>Initial Supply (tokens)</label>
+                            <input type="number" id="tokenInitialSupply" value="1000000" placeholder="1000000">
+                        </div>
+                        <div class="form-group">
+                            <label>Max Supply (tokens)</label>
+                            <input type="number" id="tokenMaxSupply" value="10000000" placeholder="10000000">
+                        </div>
+                        <button class="btn-primary btn-deploy" id="deployTokenBtn">Deploy ERC-20 Token</button>
+                    </div>
+                </div>
+
+                <!-- NFT Deploy -->
+                <div class="deploy-panel" id="deploy-nft">
+                    <div class="deploy-desc">
+                        <span class="contract-badge nft">CryptoVerseNFT (CVNFT)</span>
+                        <p>ERC-721 NFT with fully on-chain SVG generative art. Each NFT is unique and stored entirely on the blockchain.</p>
+                    </div>
+                    <div class="deploy-form">
+                        <div class="form-group">
+                            <label>Mint Price (ETH)</label>
+                            <input type="number" id="nftMintPrice" value="0.001" step="0.001" placeholder="0.001">
+                        </div>
+                        <button class="btn-primary btn-deploy" id="deployNftBtn">Deploy ERC-721 NFT</button>
+                    </div>
+                </div>
+
+                <!-- Vault Deploy -->
+                <div class="deploy-panel" id="deploy-vault">
+                    <div class="deploy-desc">
+                        <span class="contract-badge vault">CryptoVerseVault</span>
+                        <p>DeFi staking vault with time-locked deposits, tiered rewards (0.5% – 12%), reentrancy guards, and emergency withdrawal.</p>
+                    </div>
+                    <div class="deploy-form">
+                        <button class="btn-primary btn-deploy" id="deployVaultBtn">Deploy DeFi Vault</button>
+                    </div>
+                </div>
+
+                <!-- Deploy Result -->
+                <div class="deploy-result" id="deployResult" style="display:none">
+                    <div class="deploy-result-header">
+                        <span class="result-status">✅ Deployed</span>
+                        <span class="result-network" id="deployNetwork">--</span>
+                    </div>
+                    <div class="result-grid" style="margin-top:12px">
+                        <div class="result-item full"><span class="result-label">Contract Address</span><span class="result-value mono" id="deployedAddress" style="font-size:0.78rem">--</span></div>
+                        <div class="result-item full"><span class="result-label">Transaction Hash</span><span class="result-value mono" id="deployTxHash" style="font-size:0.75rem">--</span></div>
+                        <div class="result-item"><span class="result-label">Block</span><span class="result-value mono" id="deployBlock">--</span></div>
+                        <div class="result-item"><span class="result-label">Gas Used</span><span class="result-value mono" id="deployGas">--</span></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Contract Interaction Section -->
+            <section class="card contracts-interact-card">
+                <div class="card-header">
+                    <h2 class="card-title">⚡ Interact with Contract</h2>
+                </div>
+                <div class="interact-input-group">
+                    <label>Contract Address</label>
+                    <input type="text" id="interactAddress" placeholder="0x... (paste deployed contract address)" class="big-input">
+                </div>
+                <div class="interact-tabs">
+                    <button class="interact-tab active" data-action="mint">Mint Tokens</button>
+                    <button class="interact-tab" data-action="transfer">Transfer</button>
+                    <button class="interact-tab" data-action="balance">Check Balance</button>
+                    <button class="interact-tab" data-action="info">Token Info</button>
+                </div>
+
+                <div class="interact-panel active" id="interact-mint">
+                    <div class="form-group"><label>Recipient Address</label><input type="text" id="mintTo" placeholder="0x..."></div>
+                    <div class="form-group"><label>Amount (tokens)</label><input type="number" id="mintAmount" value="100" placeholder="100"></div>
+                    <button class="btn-primary" id="mintTokensBtn">Mint Tokens</button>
+                </div>
+
+                <div class="interact-panel" id="interact-transfer">
+                    <div class="form-group"><label>Recipient Address</label><input type="text" id="transferTo" placeholder="0x..."></div>
+                    <div class="form-group"><label>Amount (tokens)</label><input type="number" id="transferAmount" value="10" placeholder="10"></div>
+                    <button class="btn-primary" id="transferTokensBtn">Transfer Tokens</button>
+                </div>
+
+                <div class="interact-panel" id="interact-balance">
+                    <div class="form-group"><label>Address to Check</label><input type="text" id="balanceCheckAddr" placeholder="0x..."></div>
+                    <button class="btn-primary" id="checkBalanceBtn">Check Balance</button>
+                    <div class="interact-result" id="balanceResult" style="display:none"></div>
+                </div>
+
+                <div class="interact-panel" id="interact-info">
+                    <button class="btn-primary" id="tokenInfoBtn">Fetch Token Info</button>
+                    <div class="interact-result" id="tokenInfoResult" style="display:none"></div>
+                </div>
+
+                <div class="interact-result" id="interactResult" style="display:none"></div>
+            </section>
+
+            <!-- NFT Minting Section -->
+            <section class="card contracts-nft-card">
+                <div class="card-header">
+                    <h2 class="card-title">🎨 NFT Minting</h2>
+                    <span class="card-subtitle">On-Chain Generative Art</span>
+                </div>
+                <div class="nft-mint-section">
+                    <div class="form-group"><label>NFT Contract Address</label><input type="text" id="nftContractAddr" placeholder="0x... (deployed CVNFT address)"></div>
+                    <button class="btn-primary btn-lg" id="mintNftBtn">🎨 Mint NFT</button>
+                    <div class="nft-result" id="nftMintResult" style="display:none"></div>
+                </div>
+                <div class="nft-gallery" id="nftGallery">
+                    <p style="color:var(--text-tertiary);font-size:0.85rem;text-align:center;padding:20px">Mint an NFT to see your on-chain generative art here.</p>
+                </div>
+            </section>
+
+            <!-- Contract Source Code Viewer -->
+            <section class="card contracts-source-card">
+                <div class="card-header">
+                    <h2 class="card-title">📋 Solidity Source Code</h2>
+                    <span class="card-subtitle">Hand-written, no OpenZeppelin</span>
+                </div>
+                <div class="source-tabs">
+                    <button class="source-tab active" data-source="token-src">CryptoVerseToken.sol</button>
+                    <button class="source-tab" data-source="nft-src">CryptoVerseNFT.sol</button>
+                    <button class="source-tab" data-source="vault-src">CryptoVerseVault.sol</button>
+                </div>
+                <div class="source-panel active" id="source-token-src">
+                    <pre class="source-code"><code id="tokenSourceCode">// Loading contract source...</code></pre>
+                </div>
+                <div class="source-panel" id="source-nft-src">
+                    <pre class="source-code"><code id="nftSourceCode">// Loading contract source...</code></pre>
+                </div>
+                <div class="source-panel" id="source-vault-src">
+                    <pre class="source-code"><code id="vaultSourceCode">// Loading contract source...</code></pre>
+                </div>
+                <div class="source-info">
+                    <div class="source-info-item"><span>Compiler</span><span class="mono">Solidity ^0.8.20</span></div>
+                    <div class="source-info-item"><span>License</span><span class="mono">MIT</span></div>
+                    <div class="source-info-item"><span>EVM Target</span><span class="mono">Manta Pacific / Any EVM</span></div>
+                    <div class="source-info-item"><span>Framework</span><span class="mono">Hardhat</span></div>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
     <!-- ═══════ Footer ═══════ -->
     <footer class="footer">
         <div class="footer-inner">
             <div class="footer-left">
                 <span class="footer-logo">◆ CryptoVerse</span>
-                <span class="footer-copy">Full-Stack Blockchain Dashboard — Node.js + Ethers.js + WebSocket</span>
+                <span class="footer-copy">Full-Stack Web3 Dashboard — Solidity · Node.js · Ethers.js · Manta Pacific</span>
             </div>
             <div class="footer-right">
-                <span class="footer-tech">express · ethers.js · chart.js · ws</span>
+                <span class="footer-tech">solidity · hardhat · express · ethers.js · chart.js · ws</span>
             </div>
         </div>
     </footer>
@@ -330,5 +505,6 @@
     <div class="toast-container" id="toastContainer"></div>
 
     <script src="js/app.js"></script>
+    <script src="js/contracts.js"></script>
 </body>
 </html>

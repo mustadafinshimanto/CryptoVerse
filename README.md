@@ -5,16 +5,17 @@
 <h1 align="center">◆ CryptoVerse</h1>
 
 <p align="center">
-  <b>A Full-Stack, Real-Time Blockchain Dashboard</b><br>
-  <i>✨ Vibe Coded with Node.js · Express · Ethers.js · WebSocket · Chart.js ✨</i>
+  <b>A Full-Stack Web3 Portfolio Project & Real-Time Blockchain Dashboard</b><br>
+  <i>✨ Built with Solidity · Hardhat · Manta Pacific · Node.js · Ethers.js ✨</i>
 </p>
 
 <p align="center">
+  <img src="https://img.shields.io/badge/Solidity-e6e6e6?style=for-the-badge&logo=solidity&logoColor=black" alt="Solidity">
+  <img src="https://img.shields.io/badge/Hardhat-FFF100?style=for-the-badge&logo=hardhat&logoColor=black" alt="Hardhat">
   <img src="https://img.shields.io/badge/Node.js-18+-339933?style=for-the-badge&logo=node.js&logoColor=white" alt="Node.js">
-  <img src="https://img.shields.io/badge/Express-4.x-000000?style=for-the-badge&logo=express&logoColor=white" alt="Express">
   <img src="https://img.shields.io/badge/Ethers.js-6.x-3C3C3D?style=for-the-badge&logo=ethereum&logoColor=white" alt="Ethers.js">
   <img src="https://img.shields.io/badge/WebSocket-Live-6366f1?style=for-the-badge&logo=websocket&logoColor=white" alt="WebSocket">
-  <img src="https://img.shields.io/badge/Vibe_Coded-🎵_AI_Powered-ff69b4?style=for-the-badge" alt="Vibe Coded">
+  <img src="https://img.shields.io/badge/Manta_Network-Pacific_L2-06b6d4?style=for-the-badge" alt="Manta Network">
   <img src="https://img.shields.io/badge/license-MIT-blue?style=for-the-badge" alt="License">
 </p>
 
@@ -28,42 +29,49 @@
 
 ## 🚀 Overview
 
-**CryptoVerse** is a production-grade, full-stack Web3 dashboard **vibe coded** from concept to deployment — turning creative ideas into a working blockchain application through AI-powered pair programming. It features a Node.js backend powering 15+ REST API endpoints and a WebSocket server for real-time block streaming, whale alerts, and gas tracking — all consumed by a premium, single-page frontend application.
+**CryptoVerse** is a production-grade, full-stack **Web3 Portfolio Project** designed to demonstrate advanced blockchain engineering capabilities. It bridges the gap between Web2 dashboard analytics and true Web3 interactivity by integrating **custom Solidity smart contracts**, on-chain write interactions, and seamless support for **EVM-compatible environments like Manta Pacific L2**.
 
-This project demonstrates deep blockchain engineering skills, including:
+It features a robust Hardhat development environment for Solidity, a Node.js backend powering 15+ REST API endpoints, a live WebSocket server for real-time synchronization, and a premium frontend interface designed for direct Web3 wallet (MetaMask) interactions.
 
-- **Server-side blockchain interaction** via Ethers.js multi-chain providers
-- **Transaction decoding** (ERC-20, Uniswap V2, NFT operations)
-- **Address analysis** (EOA vs Smart Contract detection, ENS resolution)
-- **Real-time data streaming** via WebSocket (new blocks, whale alerts, gas updates)
-- **Full-stack architecture** with caching, proxying, and error handling
+This project demonstrates comprehensive Web3 and blockchain engineering skills, including:
+
+- **Solidity Smart Contract Development:** Custom ERC-20 token, fully on-chain generative ERC-721 NFT, and a DeFi Staking Vault (written from scratch to demonstrate low-level EVM knowledge).
+- **Manta Network Integration:** Configured to deploy to and interact with the Manta Pacific L2 ecosystem.
+- **On-Chain Web3 Interactions:** MetaMask integration for deploying contracts, minting NFTs, and staking funds directly from the frontend.
+- **Server-Side Blockchain Interaction:** Complex transaction decoding, block streaming, and gas estimation via Ethers.js multi-chain providers.
 
 ---
 
 ## ✨ Features
 
+### 💎 Smart Contracts (Solidity + Hardhat)
+
+| Contract | Features | Description |
+|---|---|---|
+| **CryptoVerseToken** | `ERC-20` | Custom implementation with mint, burn, pause, and access control mechanics. |
+| **CryptoVerseNFT** | `ERC-721` | Fully on-chain generative SVG art and metadata based on blockchain entropy. |
+| **CryptoVerseVault** | `DeFi` | Staking vault with time-locked deposits, tiered reward distribution, and reentrancy protection. |
+
 ### 🔗 Backend (Node.js + Express)
 
 | Feature | Description |
 |---|---|
-| **Multi-Chain Support** | Ethereum, Polygon, BSC with automatic RPC failover |
+| **Multi-Chain Support** | Ethereum, **Manta Pacific L2**, Polygon, BSC with automatic RPC failover |
 | **Transaction Decoder** | Parses ERC-20 transfers, Uniswap swaps, NFT operations from raw calldata |
 | **Address Analyzer** | Detects EOA vs Smart Contract, reads bytecode size, resolves ENS |
-| **Token Scanner** | Checks 8 popular ERC-20 token balances for any address |
+| **Token Scanner** | Checks popular ERC-20 token balances for any address |
 | **Gas Oracle** | EIP-1559 aware gas pricing with USD cost estimates |
-| **Whale Monitor** | Real-time alerts for ETH transfers ≥ 10 ETH |
-| **Market Proxy** | Server-side CoinGecko proxy with in-memory TTL caching |
-| **Universal Search** | Search by address, tx hash, block number, or ENS name |
 | **WebSocket Server** | Live streaming of blocks, gas updates, and whale alerts |
 
 ### 🎨 Frontend (Vanilla JS SPA)
 
 | Page | Description |
 |---|---|
-| **📊 Dashboard** | Interactive price chart, top 10 coins with 7-day sparklines, gas oracle, live block feed |
-| **🔍 Block Explorer** | Browse latest blocks with drill-down to individual block transactions |
-| **🔬 TX Analyzer** | Paste any transaction hash → decoded method calls, arguments, event logs, gas costs |
-| **🔎 Address Inspector** | Inspect any Ethereum address for balance, type, ENS, and ERC-20 tokens |
+| **📊 Dashboard** | Interactive price chart, top 10 coins, gas oracle, live block feed |
+| **🔍 Explorer** | Browse latest blocks with drill-down to individual block transactions |
+| **🔬 TX Analyzer** | Paste any transaction hash → decoded method calls, args, event logs |
+| **🔎 Inspector** | Inspect any Ethereum address for balance, type, ENS, and ER20 tokens |
+| **📜 Contracts** | Deploy contracts, mint tokens/NFTs, stake in vaults, view Solidity source code |
 | **💼 Wallet** | Connect MetaMask to view balances, network info, and token holdings |
 
 ### 🎯 Design
@@ -80,6 +88,11 @@ This project demonstrates deep blockchain engineering skills, including:
 
 ```
 CryptoVerse/
+├── contracts/             # Solidity Smart Contracts
+│   ├── CryptoVerseToken.sol   (Custom ERC-20)
+│   ├── CryptoVerseNFT.sol     (On-chain Generative Art)
+│   └── CryptoVerseVault.sol   (DeFi Staking Vault)
+├── hardhat.config.js      # Hardhat config with Manta Pacific settings
 ├── server.js              # Node.js backend (Express + WebSocket + Ethers.js)
 ├── package.json           # Dependencies and scripts
 ├── .env                   # Environment variables (gitignored)

@@ -407,3 +407,341 @@ img { max-width:100%; display:block; }
     .footer-inner{flex-direction:column;text-align:center;} .footer-copy{margin-left:0;}
     .search-box{flex-direction:column;}
 }
+
+/* ═══════════════════════════════════════════
+   Smart Contracts Page
+   ═══════════════════════════════════════════ */
+
+/* Grid layout */
+.contracts-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+}
+.contracts-deploy-card { grid-column: 1; }
+.contracts-interact-card { grid-column: 2; }
+.contracts-nft-card { grid-column: 1; }
+.contracts-source-card { grid-column: 1 / -1; }
+
+/* Deploy Tabs */
+.deploy-tabs, .interact-tabs, .source-tabs {
+    display: flex;
+    gap: 2px;
+    background: var(--bg-input);
+    padding: 3px;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border-color);
+    margin-bottom: 18px;
+}
+.deploy-tab, .interact-tab, .source-tab {
+    flex: 1;
+    padding: 8px 12px;
+    border-radius: var(--radius-md);
+    font-size: 0.76rem;
+    font-weight: 600;
+    color: var(--text-tertiary);
+    transition: all var(--transition-base);
+    text-align: center;
+}
+.deploy-tab:hover, .interact-tab:hover, .source-tab:hover {
+    color: var(--text-secondary);
+    background: rgba(255,255,255,0.03);
+}
+.deploy-tab.active, .interact-tab.active, .source-tab.active {
+    color: white;
+    background: var(--accent-indigo);
+    box-shadow: 0 2px 8px rgba(99,102,241,0.3);
+}
+
+/* Deploy/Interact Panels */
+.deploy-panel, .interact-panel, .source-panel {
+    display: none;
+}
+.deploy-panel.active, .interact-panel.active, .source-panel.active {
+    display: block;
+    animation: fadeIn 0.25s ease;
+}
+
+/* Contract badges */
+.contract-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    margin-bottom: 8px;
+}
+.contract-badge.token {
+    background: linear-gradient(135deg, rgba(99,102,241,0.15), rgba(139,92,246,0.15));
+    color: var(--accent-violet);
+    border: 1px solid rgba(139,92,246,0.2);
+}
+.contract-badge.nft {
+    background: linear-gradient(135deg, rgba(6,182,212,0.15), rgba(34,197,94,0.15));
+    color: var(--accent-cyan);
+    border: 1px solid rgba(6,182,212,0.2);
+}
+.contract-badge.vault {
+    background: linear-gradient(135deg, rgba(245,158,11,0.15), rgba(239,68,68,0.15));
+    color: var(--amber);
+    border: 1px solid rgba(245,158,11,0.2);
+}
+
+/* Deploy description */
+.deploy-desc {
+    margin-bottom: 18px;
+}
+.deploy-desc p {
+    font-size: 0.82rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+}
+
+/* Form elements */
+.deploy-form, .interact-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+.deploy-panel.active .deploy-form {
+    display: flex;
+}
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+.form-group label {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+.form-group input {
+    padding: 10px 14px;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-color);
+    background: var(--bg-input);
+    color: var(--text-primary);
+    font-size: 0.85rem;
+    font-family: var(--font-mono);
+    outline: none;
+    transition: all var(--transition-base);
+}
+.form-group input:focus {
+    border-color: var(--accent-indigo);
+    box-shadow: 0 0 0 3px rgba(99,102,241,0.15);
+}
+.form-group input::placeholder {
+    color: var(--text-tertiary);
+    font-family: var(--font-sans);
+}
+
+/* Deploy button */
+.btn-deploy {
+    margin-top: 6px;
+}
+
+/* Deploy Result */
+.deploy-result {
+    margin-top: 18px;
+    padding: 16px;
+    border-radius: var(--radius-lg);
+    background: var(--green-bg);
+    border: 1px solid rgba(34,197,94,0.2);
+    animation: fadeIn 0.4s ease;
+}
+.deploy-result-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.result-status {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--green);
+}
+.result-network {
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 12px;
+    background: var(--bg-input);
+    color: var(--text-secondary);
+}
+
+/* Interact input group */
+.interact-input-group {
+    margin-bottom: 14px;
+}
+.interact-input-group label {
+    display: block;
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 5px;
+}
+
+/* Interact result */
+.interact-result {
+    margin-top: 12px;
+    animation: fadeIn 0.3s ease;
+}
+.interact-result-card {
+    padding: 14px;
+    border-radius: var(--radius-md);
+    background: var(--bg-input);
+    border: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+.interact-result-label {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+.interact-result-value {
+    font-size: 1.1rem;
+    font-weight: 800;
+    font-family: var(--font-mono);
+    color: var(--accent-indigo);
+}
+
+/* NFT Section */
+.nft-mint-section {
+    margin-bottom: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+.nft-result {
+    animation: fadeIn 0.4s ease;
+}
+.nft-gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 14px;
+}
+.nft-art-card {
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    background: var(--bg-input);
+    border: 1px solid var(--border-color);
+    transition: all var(--transition-base);
+    animation: fadeIn 0.5s ease;
+}
+.nft-art-card:hover {
+    border-color: var(--accent-indigo);
+    box-shadow: 0 4px 20px rgba(99,102,241,0.2);
+    transform: translateY(-3px);
+}
+.nft-art-image {
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+    border-bottom: 1px solid var(--border-color);
+}
+.nft-art-info {
+    padding: 12px;
+}
+.nft-art-name {
+    display: block;
+    font-size: 0.78rem;
+    font-weight: 700;
+    margin-bottom: 6px;
+}
+.nft-art-traits {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+}
+.nft-trait {
+    font-size: 0.62rem;
+    padding: 2px 6px;
+    border-radius: 4px;
+    background: var(--bg-card);
+    color: var(--text-tertiary);
+    font-family: var(--font-mono);
+    border: 1px solid var(--border-color);
+}
+
+/* Source Code Viewer */
+.source-code {
+    position: relative;
+    max-height: 500px;
+    overflow: auto;
+    border-radius: var(--radius-lg);
+    padding: 20px;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    line-height: 1.7;
+    color: var(--text-secondary);
+    white-space: pre;
+    tab-size: 4;
+}
+.source-code code {
+    color: inherit;
+}
+
+/* Source info strip */
+.source-info {
+    display: flex;
+    gap: 14px;
+    padding: 14px 0 0;
+    flex-wrap: wrap;
+}
+.source-info-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    border-radius: var(--radius-sm);
+    background: var(--bg-input);
+    border: 1px solid var(--border-color);
+    font-size: 0.72rem;
+}
+.source-info-item span:first-child {
+    color: var(--text-tertiary);
+    font-weight: 500;
+}
+.source-info-item .mono {
+    color: var(--text-primary);
+    font-weight: 600;
+}
+
+/* ═══ Contracts Responsive ═══ */
+@media(max-width:1024px) {
+    .contracts-grid {
+        grid-template-columns: 1fr;
+    }
+    .contracts-deploy-card,
+    .contracts-interact-card,
+    .contracts-nft-card,
+    .contracts-source-card {
+        grid-column: 1;
+    }
+}
+@media(max-width:768px) {
+    .deploy-tabs, .interact-tabs, .source-tabs {
+        flex-direction: column;
+    }
+    .source-code {
+        max-height: 300px;
+        font-size: 0.68rem;
+    }
+    .nft-gallery {
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    }
+    .source-info {
+        flex-direction: column;
+    }
+}
