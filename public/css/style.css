@@ -184,7 +184,7 @@ img { max-width:100%; display:block; }
 .eip1559-badge { padding:3px 8px; border-radius:var(--radius-xs); font-size:0.65rem; font-weight:700; color:var(--accent-violet); background:rgba(139,92,246,0.1); }
 
 /* ═══ Dashboard Grid ═══ */
-.dashboard-grid { display:grid; grid-template-columns:1fr 360px; gap:18px; }
+.dashboard-grid { display:grid; grid-template-columns:1fr 420px; gap:18px; }
 .card-chart { grid-column:1; }
 .card-coins { grid-column:2; grid-row:1/3; }
 .card-gas { grid-column:1; }
@@ -209,10 +209,10 @@ img { max-width:100%; display:block; }
 .chart-loading.visible { opacity:1; pointer-events:auto; }
 
 /* ═══ Coins List ═══ */
-.coins-table-header { display:grid; grid-template-columns:26px minmax(120px, 1fr) 100px 65px 75px; gap:8px; padding:0 10px 10px; font-size:0.67rem; font-weight:600; text-transform:uppercase; letter-spacing:0.06em; color:var(--text-tertiary); border-bottom:1px solid var(--border-color); }
+.coins-table-header { display:grid; grid-template-columns:26px minmax(100px, 1fr) 95px 60px 70px; gap:6px; padding:0 10px 10px; font-size:0.67rem; font-weight:600; text-transform:uppercase; letter-spacing:0.06em; color:var(--text-tertiary); border-bottom:1px solid var(--border-color); }
 .col-price,.col-change { text-align:right; }
 .coins-list { max-height:500px; overflow-y:auto; }
-.coin-row { display:grid; grid-template-columns:26px minmax(120px, 1fr) 100px 65px 75px; gap:8px; align-items:center; padding:9px 10px; border-radius:var(--radius-sm); transition:background var(--transition-fast); cursor:pointer; }
+.coin-row { display:grid; grid-template-columns:26px minmax(100px, 1fr) 95px 60px 70px; gap:6px; align-items:center; padding:9px 10px; border-radius:var(--radius-sm); transition:background var(--transition-fast); cursor:pointer; }
 .coin-row:hover { background:rgba(255,255,255,0.03); }
 .coin-rank { font-size:0.75rem; font-weight:600; color:var(--text-tertiary); }
 .coin-info { display:flex; align-items:center; gap:8px; min-width:0; }
@@ -383,9 +383,9 @@ img { max-width:100%; display:block; }
 
 /* ═══ Responsive ═══ */
 @media(max-width:1200px) { 
-    .dashboard-grid{grid-template-columns:1fr 320px;}
     .search-container{max-width:260px;}
     .ws-status span {display:none;}
+    .dashboard-grid{grid-template-columns:1fr;} .card-coins{grid-column:1;grid-row:auto;} .coins-list{max-height:400px;}
 }
 @media(max-width:1150px) {
     .header-nav{display:none;position:absolute;top:var(--header-height);left:0;right:0;flex-direction:column;background:var(--bg-card-solid);border-bottom:1px solid var(--border-color);padding:10px;border-radius:0;z-index:200;}
@@ -394,7 +394,6 @@ img { max-width:100%; display:block; }
     .search-container{display:none;}
 }
 @media(max-width:1024px) {
-    .dashboard-grid{grid-template-columns:1fr;} .card-coins{grid-column:1;grid-row:auto;} .coins-list{max-height:300px;}
     .wallet-grid{grid-template-columns:1fr;} .result-grid{grid-template-columns:1fr;}
     .search-container{display:none;}
     .chain-select{display:none;}
